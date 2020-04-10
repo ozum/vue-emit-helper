@@ -14,7 +14,7 @@ Helper functions for emitting values from Vue component using composition API.
 - [API](#api)
 - [vue-emit-helper](#vue-emit-helper)
   - [Functions](#functions)
-    - [getEmitHelpers](#getemithelpers)
+    - [useEmitHelper](#useemithelper)
 - [Interfaces](#interfaces)
 - [Interface: EmitHelper](#interface-emithelper)
   - [Hierarchy](#hierarchy)
@@ -41,18 +41,21 @@ Helper functions for emitting values from Vue component using composition API.
 </template>
 
 <script lang="ts">
-import getEmitHelpers from "vue-emit-helper";
+import useEmitHelper from "vue-emit-helper";
 
 export default defineComponent({
   props: {
-    value: { type: Object, required: true } // Example: { quantity: 4, unitPrice: 12.3, modifications: {...} }
+    value: { type: Object, required: true } // i.e object value: { quantity: 4, unitPrice: 12.3, modifications: {...} }
   },
   setup(props, context) {
-    const { getVModel, emitWith, listeners } = getEmitHelpers(props, context, { prop: "value", event: "input" });
+    // Default options are: { prop: "value", event: "input" }
+    const { getVModel, emitWith, listeners, attrs } = useEmitHelper(props, context);
+
     // ... your setup code
+
     return {
-      quantity: getVModel("quantity"), // equals: <... :value="value[quantity]" @input="$emit(ALL-VALUE-OBJECT-WITH-NEW-QUANTITY)" />
-      unitPrice: getVModel("unitPrice"), // equals: <... :value="value[quantity]" @input="$emit(ALL-VALUE-OBJECT-WITH-NEW-UNIT-PRICE)" />
+      quantity: getVModel("quantity"),
+      unitPrice: getVModel("unitPrice"),
       default: "vat", // For advanced usage shown in example template.
     }
   }
@@ -63,8 +66,21 @@ export default defineComponent({
 # Details
 
 Using Vue composition API, provides helper functions which emits (immutable) values with deep objects/arrays/Maps.
-Also provides functions which returns values used as `v-model`, which has necessary `:value` and `@input` function which
-emits configured event automatically.
+Also provides functions which returns values used as `v-model`, which emits configured event automatically.
+
+For example:
+
+```ts
+const { getVModel } = useEmitHelper(props, context);
+
+const quantity = getVModel("item.quantity");
+
+// Approximately equal to:
+const quantity_2 = computed({
+  get: () => props.value.item.quantity,
+  set: (newQuantity) => context.emit("input", immutableSet("props.value", "item.quantity", newQuantity))
+})
+```
 
 # API
 
@@ -77,11 +93,11 @@ emits configured event automatically.
 
 ## Functions
 
-###  getEmitHelpers
+###  useEmitHelper
 
-▸ **getEmitHelpers**<**P**, **PK**>(`props`: P, `context`: SetupContext, `__namedParameters`: object): *[EmitHelper](#interfacesemithelpermd)*
+▸ **useEmitHelper**<**P**, **PK**>(`props`: P, `context`: SetupContext, `__namedParameters`: object): *[EmitHelper](#interfacesemithelpermd)*
 
-Defined in vue-emit-helper.ts:72
+*Defined in [vue-emit-helper.ts:75](https://github.com/ozum/vue-emit-helper/blob/9137e84/src/vue-emit-helper.ts#L75)*
 
 Creates helper functions for emitting values from Vue component.
 
@@ -97,18 +113,20 @@ Creates helper functions for emitting values from Vue component.
 </template>
 
 <script lang="ts">
-import getEmitHelpers from "vue-emit-helper";
+import useEmitHelper from "vue-emit-helper";
 
 export default defineComponent({
   props: {
     value: { type: Object, required: true } // Example: { quantity: 4, unitPrice: 12.3, modifications: {...} }
   },
   setup(props, context) {
-    const { getVModel, emitWith, listeners } = getEmitHelpers(props, context, { prop: "value", event: "input" });
+    const { getVModel, emitWith, listeners } = useEmitHelper(props, context, { prop: "value", event: "input" });
     // ... your setup code
+
+    // See example in `getVModel` also.
     return {
-      quantity: getVModel("quantity"), // equals: <... :value="value[quantity]" @input="$emit(ALL-VALUE-OBJECT-WITH-NEW-QUANTITY)" />
-      unitPrice: getVModel("unitPrice"), // equals: <... :value="value[quantity]" @input="$emit(ALL-VALUE-OBJECT-WITH-NEW-UNIT-PRICE)" />
+      quantity: getVModel("quantity"),
+      unitPrice: getVModel("unitPrice"),
       default: "vat"
     }
   }
@@ -162,7 +180,7 @@ helper functions.
 
 • **attrs**: *Ref‹Record‹string, string››*
 
-Defined in vue-emit-helper.ts:33
+*Defined in [vue-emit-helper.ts:34](https://github.com/ozum/vue-emit-helper/blob/9137e84/src/vue-emit-helper.ts#L34)*
 
 Computed value of object of attrs except value of emitted event. This is used to prevent down passing of emiited value.
 
@@ -172,7 +190,7 @@ ___
 
 • **emitWith**: *function*
 
-Defined in vue-emit-helper.ts:12
+*Defined in [vue-emit-helper.ts:12](https://github.com/ozum/vue-emit-helper/blob/9137e84/src/vue-emit-helper.ts#L12)*
 
 Emits `props.value` after **immutably** setting given `attribute` to given value.
 If new value passed is `undefined`, it deletes related key instead of setting it to `undefined`.
@@ -198,16 +216,17 @@ ___
 
 • **getVModel**: *function*
 
-Defined in vue-emit-helper.ts:29
+*Defined in [vue-emit-helper.ts:30](https://github.com/ozum/vue-emit-helper/blob/9137e84/src/vue-emit-helper.ts#L30)*
 
 Returns vue `computed` value to be used target of a `v-model` which emits immutable value with new value of the given attribute.
 If new value passed to `v-model` is `undefined`, it deletes related key instead of setting it to `undefined`.
 
 #### Example
 ```typescript
-const { getVModel } = getEmitHelpers(props, context, { prop: "value", event: "input" });
+const { getVModel } = useEmitHelper(props, context, { prop: "value", event: "input" });
 const quantity = getVModel("item.quantity");
-// Approximately equal to:
+
+// getVModel("item.quantity") is approximately equal to:
 const quantity = computed({
   get: () => props.value.item.quantity,
   set: (newQuantity) => context.emit("input", immutableSet("props.value", "item.quantity", newQuantity))
@@ -234,7 +253,7 @@ ___
 
 • **listeners**: *Ref‹Record‹string, Function››*
 
-Defined in vue-emit-helper.ts:31
+*Defined in [vue-emit-helper.ts:32](https://github.com/ozum/vue-emit-helper/blob/9137e84/src/vue-emit-helper.ts#L32)*
 
 Computed value of object of events except emitted event. This is used to prevent down passing of emiited event.
 
