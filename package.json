@@ -1,6 +1,6 @@
 {
   "name": "vue-emit-helper",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Helper functions for emitting values from Vue component using composition API.",
   "keywords": [
     "vue",
