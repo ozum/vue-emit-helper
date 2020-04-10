@@ -1,1 +1,3 @@
-export * from "./vue-emit-helper";
+import useEmitHelper from "./vue-emit-helper";
+
+export default useEmitHelper;

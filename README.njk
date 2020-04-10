@@ -17,18 +17,21 @@
 </template>
 
 <script lang="ts">
-import getEmitHelpers from "vue-emit-helper";
+import useEmitHelper from "vue-emit-helper";
 
 export default defineComponent({
   props: {
-    value: { type: Object, required: true } // Example: { quantity: 4, unitPrice: 12.3, modifications: {...} }
+    value: { type: Object, required: true } // i.e object value: { quantity: 4, unitPrice: 12.3, modifications: {...} }
   },
   setup(props, context) {
-    const { getVModel, emitWith, listeners } = getEmitHelpers(props, context, { prop: "value", event: "input" });
+    // Default options are: { prop: "value", event: "input" }
+    const { getVModel, emitWith, listeners, attrs } = useEmitHelper(props, context);
+
     // ... your setup code
+
     return {
-      quantity: getVModel("quantity"), // equals: <... :value="value[quantity]" @input="$emit(ALL-VALUE-OBJECT-WITH-NEW-QUANTITY)" />
-      unitPrice: getVModel("unitPrice"), // equals: <... :value="value[quantity]" @input="$emit(ALL-VALUE-OBJECT-WITH-NEW-UNIT-PRICE)" />
+      quantity: getVModel("quantity"),
+      unitPrice: getVModel("unitPrice"),
       default: "vat", // For advanced usage shown in example template.
     }
   }
@@ -39,8 +42,21 @@ export default defineComponent({
 # Details
 
 Using Vue composition API, provides helper functions which emits (immutable) values with deep objects/arrays/Maps.
-Also provides functions which returns values used as `v-model`, which has necessary `:value` and `@input` function which
-emits configured event automatically.
+Also provides functions which returns values used as `v-model`, which emits configured event automatically.
+
+For example:
+
+```ts
+const { getVModel } = useEmitHelper(props, context);
+
+const quantity = getVModel("item.quantity");
+
+// Approximately equal to:
+const quantity_2 = computed({
+  get: () => props.value.item.quantity,
+  set: (newQuantity) => context.emit("input", immutableSet("props.value", "item.quantity", newQuantity))
+})
+```
 
 # API
 

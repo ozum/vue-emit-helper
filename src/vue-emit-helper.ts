@@ -18,9 +18,10 @@ export interface EmitHelper {
    * @returns `computed` value.
    *
    * @example
-   * const { getVModel } = getEmitHelpers(props, context, { prop: "value", event: "input" });
+   * const { getVModel } = useEmitHelper(props, context, { prop: "value", event: "input" });
    * const quantity = getVModel("item.quantity");
-   * // Approximately equal to:
+   *
+   * // getVModel("item.quantity") is approximately equal to:
    * const quantity = computed({
    *   get: () => props.value.item.quantity,
    *   set: (newQuantity) => context.emit("input", immutableSet("props.value", "item.quantity", newQuantity))
@@ -51,25 +52,27 @@ export interface EmitHelper {
  * </template>
  *
  * <script lang="ts">
- * import getEmitHelpers from "vue-emit-helper";
+ * import useEmitHelper from "vue-emit-helper";
  *
  * export default defineComponent({
  *   props: {
  *     value: { type: Object, required: true } // Example: { quantity: 4, unitPrice: 12.3, modifications: {...} }
  *   },
  *   setup(props, context) {
- *     const { getVModel, emitWith, listeners } = getEmitHelpers(props, context, { prop: "value", event: "input" });
+ *     const { getVModel, emitWith, listeners } = useEmitHelper(props, context, { prop: "value", event: "input" });
  *     // ... your setup code
+ *
+ *     // See example in `getVModel` also.
  *     return {
- *       quantity: getVModel("quantity"), // equals: <... :value="value[quantity]" @input="$emit(ALL-VALUE-OBJECT-WITH-NEW-QUANTITY)" />
- *       unitPrice: getVModel("unitPrice"), // equals: <... :value="value[quantity]" @input="$emit(ALL-VALUE-OBJECT-WITH-NEW-UNIT-PRICE)" />
+ *       quantity: getVModel("quantity"),
+ *       unitPrice: getVModel("unitPrice"),
  *       default: "vat"
  *     }
  *   }
  * })
  * </script>
  */
-export default function getEmitHelpers<P extends Record<string, any>, PK extends keyof P>(
+export default function useEmitHelper<P extends Record<string, any>, PK extends keyof P>(
   props: P,
   context: SetupContext,
   { prop = "value" as PK, event = "input" } = {}
