@@ -97,7 +97,7 @@ const quantity_2 = computed({
 
 ▸ **useEmitHelper**<**P**, **PK**>(`props`: P, `context`: SetupContext, `__namedParameters`: object): *[EmitHelper](#interfacesemithelpermd)*
 
-*Defined in [vue-emit-helper.ts:75](https://github.com/ozum/vue-emit-helper/blob/9137e84/src/vue-emit-helper.ts#L75)*
+*Defined in [index.ts:75](https://github.com/ozum/vue-emit-helper/blob/fb31f2c/src/index.ts#L75)*
 
 Creates helper functions for emitting values from Vue component.
 
@@ -180,7 +180,7 @@ helper functions.
 
 • **attrs**: *Ref‹Record‹string, string››*
 
-*Defined in [vue-emit-helper.ts:34](https://github.com/ozum/vue-emit-helper/blob/9137e84/src/vue-emit-helper.ts#L34)*
+*Defined in [index.ts:34](https://github.com/ozum/vue-emit-helper/blob/fb31f2c/src/index.ts#L34)*
 
 Computed value of object of attrs except value of emitted event. This is used to prevent down passing of emiited value.
 
@@ -190,7 +190,7 @@ ___
 
 • **emitWith**: *function*
 
-*Defined in [vue-emit-helper.ts:12](https://github.com/ozum/vue-emit-helper/blob/9137e84/src/vue-emit-helper.ts#L12)*
+*Defined in [index.ts:12](https://github.com/ozum/vue-emit-helper/blob/fb31f2c/src/index.ts#L12)*
 
 Emits `props.value` after **immutably** setting given `attribute` to given value.
 If new value passed is `undefined`, it deletes related key instead of setting it to `undefined`.
@@ -216,7 +216,7 @@ ___
 
 • **getVModel**: *function*
 
-*Defined in [vue-emit-helper.ts:30](https://github.com/ozum/vue-emit-helper/blob/9137e84/src/vue-emit-helper.ts#L30)*
+*Defined in [index.ts:30](https://github.com/ozum/vue-emit-helper/blob/fb31f2c/src/index.ts#L30)*
 
 Returns vue `computed` value to be used target of a `v-model` which emits immutable value with new value of the given attribute.
 If new value passed to `v-model` is `undefined`, it deletes related key instead of setting it to `undefined`.
@@ -253,7 +253,7 @@ ___
 
 • **listeners**: *Ref‹Record‹string, Function››*
 
-*Defined in [vue-emit-helper.ts:32](https://github.com/ozum/vue-emit-helper/blob/9137e84/src/vue-emit-helper.ts#L32)*
+*Defined in [index.ts:32](https://github.com/ozum/vue-emit-helper/blob/fb31f2c/src/index.ts#L32)*
 
 Computed value of object of events except emitted event. This is used to prevent down passing of emiited event.
 
