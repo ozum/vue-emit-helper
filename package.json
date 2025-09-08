@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@vue/composition-api": "^0.x",
-    "devkeeper": "^0.1.59"
+    "devkeeper": "^1.1.0"
   },
   "peerDependencies": {
     "@vue/composition-api": "^0.x"
